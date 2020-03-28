@@ -23,6 +23,9 @@ object State {
     _.getLines()
       // Drop the header
       .drop(1)
+      // Convert to a form that won't disappear
+      .toArray
+      // Parse state data
       .map(_.split(","))
       .flatMap(parts => Try {
         State(parts(1), CovidDatum.DateParser.parse(parts(0)), parts(2).toInt, parts(3).toInt, parts(4).toInt)
@@ -32,6 +35,6 @@ object State {
         case Failure(error) =>
           println(error.getMessage)
           None
-      }).toSeq
+      })
   )
 }

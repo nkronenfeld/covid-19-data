@@ -23,6 +23,9 @@ object County {
     _.getLines()
       // Drop the header
       .drop(1)
+      // Conovert to a form that won't disappear
+      .toArray
+      // Parse county data
       .map(_.split(","))
       .flatMap(parts => Try {
         County(parts(2), parts(1), CovidDatum.DateParser.parse(parts(0)), parts(3).toInt, parts(4).toInt, parts(5).toInt)
@@ -32,6 +35,6 @@ object County {
         case Failure(error) =>
           println(error.getMessage)
           None
-      }).toSeq
+      })
   )
 }

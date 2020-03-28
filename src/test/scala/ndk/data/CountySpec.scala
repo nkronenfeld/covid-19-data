@@ -12,7 +12,7 @@ class CountySpec extends FunSpec {
       assert(County.counties.nonEmpty)
     }
     it("should include all 50 states") {
-      assert(County.counties.map(_.state).toSet.size == 50)
+      assert(County.counties.map(_.state).toSet.size >= 50)
     }
   }
 }
