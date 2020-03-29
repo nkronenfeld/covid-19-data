@@ -19,7 +19,8 @@ case class State (state: String,
   override val id: String = state
 }
 object State {
-  lazy val states: Seq[State] = Source.fromFile("./us-states.csv").closeWhenDone(
+  /** All the state-by-state data */
+  lazy val stateData: Seq[State] = Source.fromFile("./us-states.csv").closeWhenDone(
     _.getLines()
       // Drop the header
       .drop(1)
@@ -37,4 +38,10 @@ object State {
           None
       })
   )
+
+  /** The state-by-state data, broken out by state, each with data ordered by date */
+  lazy val stateByStateData: Map[String, Seq[State]] =
+    stateData.groupBy(_.state).map { case (state, data) =>
+      state -> data.sortBy(_.date.getTime)
+    }
 }

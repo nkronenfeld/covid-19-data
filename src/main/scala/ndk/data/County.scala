@@ -3,9 +3,10 @@ package ndk.data
 
 import java.util.Date
 
+import ndk.data.State.stateData
+
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
-
 import ndk.io.AugmentedSource.RichSource
 
 
@@ -19,7 +20,7 @@ case class County(state: String,
 }
 
 object County {
-  lazy val counties: Seq[County] = Source.fromFile("./us-counties.csv").closeWhenDone(
+  lazy val countyData: Seq[County] = Source.fromFile("./us-counties.csv").closeWhenDone(
     _.getLines()
       // Drop the header
       .drop(1)
@@ -37,4 +38,12 @@ object County {
           None
       })
   )
+
+  /** The state-by-state data, broken out by state, each with data ordered by date */
+  lazy val countyByCountyData: Map[String, Map[String, Seq[County]]] =
+    countyData.groupBy(_.state).map { case (state, stateData) =>
+      state -> stateData.groupBy(_.county).map { case (county, data) =>
+        county -> data.sortBy(_.date.getTime)
+      }
+    }
 }
